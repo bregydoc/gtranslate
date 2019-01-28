@@ -2,6 +2,7 @@ package gtranslate
 
 import (
 	"net/http"
+	"strconv"
 	"testing"
 )
 
@@ -30,7 +31,8 @@ func TestGetGoogleTranslate(t *testing.T) {
 				t.Error(err.Error())
 			}
 			if r.StatusCode != http.StatusOK {
-				t.Error("failed request with text: '" + testText)
+
+				t.Error("[" + strconv.Itoa(r.StatusCode) + "] failed request with text: '" + testText + "'")
 			}
 			if r.Body == nil {
 				t.Fail()
