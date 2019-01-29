@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	text := "a"
+	text := "Hello World"
 	translated, err := gtranslate.TranslateWithFromTo(
 		text,
 		gtranslate.FromTo{
