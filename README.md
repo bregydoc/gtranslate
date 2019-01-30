@@ -9,6 +9,16 @@ Google translate API for unlimited and free translations
 # Use
 
 ```go
+gtranslate.Translate("I'm alive", language.English, language.Spanish)
+```
+
+```go
+gtranslate.TranslateWithFromTo("I'm alive", gtranslate.FromTo{From: "en", To: "es"})
+```
+
+# Example
+
+```go
 package main
 
 import (
