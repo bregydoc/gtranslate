@@ -5,7 +5,7 @@ import (
 )
 
 func TestTranslateWithFromTo(t *testing.T) {
-	for i := 0; i < 10; i++ {
+	for i := 0; i < 4; i++ {
 		for _, ta := range testingTable {
 			resp, err := TranslateWithFromTo(ta.inText, FromTo{
 				From: ta.langFrom,
@@ -17,7 +17,7 @@ func TestTranslateWithFromTo(t *testing.T) {
 			}
 
 			if resp != ta.outText {
-				t.Error("translated text is not the expected translate")
+				t.Error("translated text is not the expected", ta.outText, " != ", resp)
 			}
 		}
 	}

@@ -13,7 +13,7 @@ import (
 
 const gt = "https://translate.googleapis.com/translate_a/single?client=gtx&sl=%s&tl=%s&dt=t&q=%s"
 
-func translate(text, from, to string, withVerification bool) (string, error) {
+func translateOld(text, from, to string, withVerification bool) (string, error) {
 
 	if withVerification {
 
@@ -72,10 +72,17 @@ func rawTranslate(text, from, to string) ([]byte, error) {
 	return data, nil
 }
 
-func getGoogleTranslate(text, from, to string) (*http.Response, error) {
-	http.DefaultClient.Timeout = 10 * time.Second
+func getGoogleTranslate(text, from, to string, customClient ...*http.Client) (*http.Response, error) {
+	client := http.DefaultClient
+	if len(customClient) != 0 {
+		client = customClient[0]
+		fmt.Println("[WARNING] Usign custom proxy")
+	}
+
+	client.Timeout = 40 * time.Second
+
 	text = url.PathEscape(text)
 	uri := fmt.Sprintf(gt, from, to, text)
 
-	return http.Get(uri)
+	return client.Get(uri)
 }
