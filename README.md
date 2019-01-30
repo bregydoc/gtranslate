@@ -1,6 +1,7 @@
 # gtranslate
 
-Google translate API for unlimited and free translations
+Google translate API for unlimited and free translations.
+This project was inspired by [google-translate-api](https://github.com/matheuss/google-translate-api).
 
 # Install
 
