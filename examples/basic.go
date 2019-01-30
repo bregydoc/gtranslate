@@ -12,13 +12,13 @@ func main() {
 		text,
 		gtranslate.FromTo{
 			From: "en",
-			To:   "es",
+			To:   "ja",
 		},
 	)
 	if err != nil {
 		panic(err)
 	}
 
-	fmt.Printf("en: %s | es: %s \n", text, translated)
-	// en: Hello World | es: Hola Mundo
+	fmt.Printf("en: %s | ja: %s \n", text, translated)
+	// en: Hello World | ja: こんにちは世界
 }

@@ -94,7 +94,12 @@ func translate(text, from, to string, withVerification bool) (string, error) {
 		if len(obj.([]interface{})) == 0 {
 			break
 		}
-		responseText += obj.([]interface{})[0].(string)
+
+		t, ok := obj.([]interface{})[0].(string)
+		if ok {
+			responseText += t
+		}
+
 	}
 
 	return responseText, nil
