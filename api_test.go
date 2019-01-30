@@ -3,6 +3,7 @@ package gtranslate
 import (
 	"fmt"
 	"testing"
+	"time"
 )
 
 type testTable struct {
@@ -21,8 +22,11 @@ var testingTable = []testTable{
 }
 
 func TestTranslate(t *testing.T) {
-	for i := 0; i < 5; i++ {
+	N := 5
+	var totalDur time.Duration
+	for i := 0; i < N; i++ {
 		for _, ta := range testingTable {
+			start := time.Now()
 			translated, err := translate(ta.inText, ta.langFrom, ta.langTo, true)
 			if err != nil {
 				t.Error(err.Error())
@@ -30,12 +34,15 @@ func TestTranslate(t *testing.T) {
 			if len(translated) < 2 {
 				t.Fail()
 			}
-			fmt.Println("Translated", translated, "[OK]")
+			dur := time.Since(start)
+			fmt.Print(".")
+			totalDur += dur
 			if translated != ta.outText {
 				t.Error("translated text is not the expected", ta.outText, " != ", translated)
 			}
 		}
 	}
+	fmt.Println("\nMean time:", time.Duration(int(totalDur)/(len(testingTable)*N)))
 }
 
 // TestGetGoogleTranslate is for testing propouse
