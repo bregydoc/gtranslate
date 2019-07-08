@@ -1,7 +1,7 @@
 # gtranslate ![build](https://travis-ci.com/bregydoc/gtranslate.svg?branch=master)
 
-Google translate API for unlimited and free translations.
-This project was inspired by [google-translate-api](https://github.com/matheuss/google-translate-api).
+Google Translate API for unlimited and free translations 📢.
+This project was inspired by [google-translate-api](https://github.com/matheuss/google-translate-api) and [google-translate-token](https://github.com/matheuss/google-translate-token).
 
 # Install
 
