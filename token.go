@@ -14,7 +14,6 @@ import (
 
 var vm = otto.New()
 
-// SM ...
 func sM(a otto.Value, TTK ...otto.Value) (otto.Value, error) {
 	err := vm.Set("x", a)
 	if err != nil {
@@ -91,55 +90,55 @@ func sM(a otto.Value, TTK ...otto.Value) (otto.Value, error) {
 		return otto.UndefinedValue(), err
 	}
 
-	// fmt.Println(result)
 	return result, nil
 }
 
-// UpdateTTK ...
-func updateTTK(TTK otto.Value) otto.Value {
+func updateTTK(TTK otto.Value) (otto.Value, error) {
 	t := time.Now().UnixNano() / 3600000
 	now := math.Floor(float64(t))
 	ttk, err := strconv.ParseFloat(TTK.String(), 64)
 	if err != nil {
-		panic(err)
+		return otto.UndefinedValue(), err
 	}
+
 	if ttk == now {
-		return TTK
-	} else {
-		resp, err := http.Get("https://translate.google.com")
-		if err != nil {
-			panic(err)
-		}
-
-		body, err := ioutil.ReadAll(resp.Body)
-		if err != nil {
-			panic(err)
-		}
-
-		matches := regexp.MustCompile(`tkk:\s?'(.+?)'`).FindStringSubmatch(string(body))
-		if len(matches) > 0 {
-			// fmt.Println("TTK Find: ", matches[0])
-			v, err := otto.ToValue(matches[0])
-			if err != nil {
-				panic(err)
-			}
-			return v
-		}
-
+		return TTK, nil
 	}
 
-	return TTK
+	resp, err := http.Get("https://translate.google.com")
+	if err != nil {
+		return otto.UndefinedValue(), err
+	}
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return otto.UndefinedValue(), err
+	}
+
+	matches := regexp.MustCompile(`tkk:\s?'(.+?)'`).FindStringSubmatch(string(body))
+	if len(matches) > 0 {
+		v, err := otto.ToValue(matches[0])
+		if err != nil {
+			return otto.UndefinedValue(), err
+		}
+		return v, nil
+	}
+
+	return TTK, nil
 }
 
-// Get ...
-func get(text otto.Value, ttk otto.Value) map[string]string {
-	ttk = updateTTK(ttk)
+func get(text otto.Value, ttk otto.Value) string {
+	ttk, err := updateTTK(ttk)
+	if err != nil {
+		return ""
+	}
+
 	tk, err := sM(text, ttk)
 
 	if err != nil {
-		panic(err)
+		return ""
 	}
 	sTk := strings.Replace(tk.String(), "&tk=", "", -1)
-	return map[string]string{"name": "tk", "value": sTk}
+	return sTk
 
 }

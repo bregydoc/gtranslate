@@ -29,8 +29,11 @@ func translate(text, from, to string, withVerification bool) (string, error) {
 			to = "en"
 		}
 	}
+
 	t, _ := otto.ToValue(text)
+
 	urll := "https://translate.google.com/translate_a/single"
+
 	token := get(t, ttk)
 
 	data := map[string]string{
@@ -47,32 +50,43 @@ func translate(text, from, to string, withVerification bool) (string, error) {
 		"kc":   "7",
 		"q":    text,
 	}
+
 	u, err := url.Parse(urll)
 	if err != nil {
 		return "", nil
 	}
+
 	parameters := url.Values{}
+
 	for k, v := range data {
 		parameters.Add(k, v)
 	}
 	for _, v := range []string{"at", "bd", "ex", "ld", "md", "qca", "rw", "rm", "ss", "t"} {
 		parameters.Add("dt", v)
 	}
-	parameters.Add(token["name"], token["value"])
+
+	parameters.Add("tk", token)
 	u.RawQuery = parameters.Encode()
-	// fmt.Println(u)
-	r, err := http.Get(u.String())
 
-	if err != nil {
-		if err == http.ErrHandlerTimeout {
-			return "", errBadNetwork
+	var r *http.Response
+
+	tries := 2
+	for tries > 0 {
+		r, err = http.Get(u.String())
+		if err != nil {
+			if err == http.ErrHandlerTimeout {
+				return "", errBadNetwork
+			}
+			return "", err
 		}
-		return "", err
-	}
 
-	if r.StatusCode != http.StatusOK {
-		// oh noooo
-		return "", errBadRequest
+		if r.StatusCode == http.StatusOK {
+			break
+		}
+
+		if r.StatusCode == http.StatusForbidden {
+			tries--
+		}
 	}
 
 	raw, err := ioutil.ReadAll(r.Body)
@@ -81,12 +95,11 @@ func translate(text, from, to string, withVerification bool) (string, error) {
 	}
 
 	var resp []interface{}
-	err = json.Unmarshal(raw, &resp)
+
+	err = json.Unmarshal([]byte(raw), &resp)
 	if err != nil {
 		return "", err
 	}
-
-	// pp.Println(resp)
 
 	responseText := ""
 	for _, obj := range resp[0].([]interface{}) {
