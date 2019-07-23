@@ -7,7 +7,7 @@ import (
 func TestTranslateWithFromTo(t *testing.T) {
 	for i := 0; i < 4; i++ {
 		for _, ta := range testingTable {
-			resp, err := TranslateWithFromTo(ta.inText, FromTo{
+			resp, err := TranslateWithParams(ta.inText, TranslationParams{
 				From: ta.langFrom,
 				To:   ta.langTo,
 			})

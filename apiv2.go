@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"time"
 
 	"golang.org/x/text/language"
 
@@ -18,7 +19,16 @@ func init() {
 	ttk, _ = otto.ToValue("0")
 }
 
-func translate(text, from, to string, withVerification bool) (string, error) {
+const (
+	defaultNumberOfRetries = 2
+)
+
+func translate(text, from, to string, withVerification bool, tries int, delay time.Duration) (string, error) {
+
+	if (tries == 0) {
+		tries = defaultNumberOfRetries
+	}
+
 	if withVerification {
 		if _, err := language.Parse(from); err != nil {
 			fmt.Println("[WARNING], '" + from + "' is a invalid language, switching to 'auto'")
@@ -70,7 +80,6 @@ func translate(text, from, to string, withVerification bool) (string, error) {
 
 	var r *http.Response
 
-	tries := 2
 	for tries > 0 {
 		r, err = http.Get(u.String())
 		if err != nil {
@@ -86,6 +95,7 @@ func translate(text, from, to string, withVerification bool) (string, error) {
 
 		if r.StatusCode == http.StatusForbidden {
 			tries--
+			time.Sleep(delay)
 		}
 	}
 
