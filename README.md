@@ -14,7 +14,7 @@ gtranslate.Translate("I'm alive", language.English, language.Spanish)
 ```
 
 ```go
-gtranslate.TranslateWithFromTo("I'm alive", gtranslate.FromTo{From: "en", To: "es"})
+gtranslate.TranslateWithParams("I'm alive", gtranslate.TranslateWithParams{From: "en", To: "es"})
 ```
 
 # Example
@@ -30,9 +30,9 @@ import (
 
 func main() {
 	text := "Hello World"
-	translated, err := gtranslate.TranslateWithFromTo(
+	translated, err := gtranslate.TranslateWithParams(
 		text,
-		gtranslate.FromTo{
+		gtranslate.TranslationParams{
 			From: "en",
 			To:   "ja",
 		},
