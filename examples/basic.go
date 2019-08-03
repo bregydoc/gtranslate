@@ -8,9 +8,9 @@ import (
 
 func main() {
 	text := "Hello World"
-	translated, err := gtranslate.TranslateWithFromTo(
+	translated, err := gtranslate.TranslateWithParams(
 		text,
-		gtranslate.FromTo{
+		gtranslate.TranslateParams{
 			From: "en",
 			To:   "ja",
 		},
