@@ -29,7 +29,7 @@ func translate(text, from, to string, withVerification bool, tries int, delay ti
 	}
 
 	if withVerification {
-		if _, err := language.Parse(from); err != nil {
+		if _, err := language.Parse(from); err != nil && from != "auto" {
 			log.Println("[WARNING], '" + from + "' is a invalid language, switching to 'auto'")
 			from = "auto"
 		}
