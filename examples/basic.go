@@ -10,7 +10,7 @@ func main() {
 	text := "Hello World"
 	translated, err := gtranslate.TranslateWithParams(
 		text,
-		gtranslate.TranslateParams{
+		gtranslate.TranslationParams{
 			From: "en",
 			To:   "ja",
 		},

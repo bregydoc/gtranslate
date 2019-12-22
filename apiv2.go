@@ -2,8 +2,8 @@ package gtranslate
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"net/url"
 	"time"
@@ -24,18 +24,17 @@ const (
 )
 
 func translate(text, from, to string, withVerification bool, tries int, delay time.Duration) (string, error) {
-
-	if (tries == 0) {
+	if tries == 0 {
 		tries = defaultNumberOfRetries
 	}
 
 	if withVerification {
 		if _, err := language.Parse(from); err != nil {
-			fmt.Println("[WARNING], '" + from + "' is a invalid language, switching to 'auto'")
+			log.Println("[WARNING], '" + from + "' is a invalid language, switching to 'auto'")
 			from = "auto"
 		}
 		if _, err := language.Parse(to); err != nil {
-			fmt.Println("[WARNING], '" + to + "' is a invalid language, switching to 'en'")
+			log.Println("[WARNING], '" + to + "' is a invalid language, switching to 'en'")
 			to = "en"
 		}
 	}
@@ -113,7 +112,6 @@ func translate(text, from, to string, withVerification bool, tries int, delay ti
 
 	responseText := ""
 	for _, obj := range resp[0].([]interface{}) {
-
 		if len(obj.([]interface{})) == 0 {
 			break
 		}
@@ -122,7 +120,6 @@ func translate(text, from, to string, withVerification bool, tries int, delay ti
 		if ok {
 			responseText += t
 		}
-
 	}
 
 	return responseText, nil

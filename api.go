@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"net/url"
 	"time"
@@ -14,15 +15,13 @@ import (
 const gt = "https://translate.googleapis.com/translate_a/single?client=gtx&sl=%s&tl=%s&dt=t&q=%s"
 
 func translateOld(text, from, to string, withVerification bool) (string, error) {
-
 	if withVerification {
-
 		if _, err := language.Parse(from); err != nil {
-			fmt.Println("[WARNING], '" + from + "' is a invalid language, switching to 'auto'")
+			log.Println("[WARNING], '" + from + "' is a invalid language, switching to 'auto'")
 			from = "auto"
 		}
 		if _, err := language.Parse(to); err != nil {
-			fmt.Println("[WARNING], '" + to + "' is a invalid language, switching to 'en'")
+			log.Println("[WARNING], '" + to + "' is a invalid language, switching to 'en'")
 			to = "en"
 		}
 	}
@@ -76,7 +75,7 @@ func getGoogleTranslate(text, from, to string, customClient ...*http.Client) (*h
 	client := http.DefaultClient
 	if len(customClient) != 0 {
 		client = customClient[0]
-		fmt.Println("[WARNING] Usign custom proxy")
+		log.Println("[WARNING] Using custom proxy")
 	}
 
 	client.Timeout = 40 * time.Second
