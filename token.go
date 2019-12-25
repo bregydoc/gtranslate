@@ -21,9 +21,9 @@ func sM(a otto.Value, TTK ...otto.Value) (otto.Value, error) {
 	}
 
 	if len(TTK) > 0 {
-		vm.Set("internalTTK", TTK[0])
+		_ = vm.Set("internalTTK", TTK[0])
 	} else {
-		vm.Set("internalTTK", "0")
+		_ = vm.Set("internalTTK", "0")
 	}
 
 	result, err := vm.Run(`
