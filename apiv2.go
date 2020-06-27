@@ -2,6 +2,7 @@ package gtranslate
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -41,7 +42,7 @@ func translate(text, from, to string, withVerification bool, tries int, delay ti
 
 	t, _ := otto.ToValue(text)
 
-	urll := "https://translate.google.com/translate_a/single"
+	urll := fmt.Sprintf("https://translate.%s/translate_a/single", GoogleHost)
 
 	token := get(t, ttk)
 
