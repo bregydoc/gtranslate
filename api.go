@@ -12,7 +12,7 @@ import (
 	"golang.org/x/text/language"
 )
 
-const gt = "https://translate.googleapis.com/translate_a/single?client=gtx&sl=%s&tl=%s&dt=t&q=%s"
+const gt = "https://translate.googleapis.com/translate_a/single?client=gtx&sl=%s&tl=%s&dj=1&dt=t&ie=UTF-8&q=%s"
 
 func translateOld(text, from, to string, withVerification bool) (string, error) {
 	if withVerification {
@@ -30,20 +30,23 @@ func translateOld(text, from, to string, withVerification bool) (string, error) 
 	if err != nil {
 		return "", err
 	}
-	var resp []interface{}
-	err = json.Unmarshal(raw, &resp)
+	resp := new(struct {
+		Sentences []struct {
+			Trans   string `json:"trans"`
+			Orig    string `json:"orig"`
+			Backend int    `json:"backend"`
+		} `json:"sentences"`
+		Src   string `json:"src"`
+		Spell struct {
+		} `json:"spell"`
+	})
+	err = json.Unmarshal(raw, resp)
 	if err != nil {
 		return "", err
 	}
 
 	responseText := ""
-	for _, obj := range resp[0].([]interface{}) {
-
-		if len(obj.([]interface{})) == 0 {
-			break
-		}
-		responseText += obj.([]interface{})[0].(string)
-	}
+	responseText = resp.Sentences[0].Trans
 
 	return responseText, nil
 }
