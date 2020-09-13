@@ -1,6 +1,7 @@
 package gtranslate
 
 import (
+	"fmt"
 	"io/ioutil"
 	"math"
 	"net/http"
@@ -105,7 +106,7 @@ func updateTTK(TTK otto.Value) (otto.Value, error) {
 		return TTK, nil
 	}
 
-	resp, err := http.Get("https://translate.google.com")
+	resp, err := http.Get(fmt.Sprintf("https://translate.%s", GoogleHost))
 	if err != nil {
 		return otto.UndefinedValue(), err
 	}

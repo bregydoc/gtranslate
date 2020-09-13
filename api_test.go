@@ -17,7 +17,7 @@ var testingTable = []testTable{
 	{"Hello", "en", "es", "Hola"},
 	{"Bye", "en", "es", "Adiós"},
 	{"Hola", "es", "en", "Hello"},
-	{"Adios", "es", "en", "Goodbye"},
+	{"Adios", "es", "en", "Bye"},
 	{"World", "en", "es", "Mundo"},
 }
 
