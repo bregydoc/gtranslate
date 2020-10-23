@@ -4,21 +4,23 @@ import (
 	"fmt"
 	"testing"
 	"time"
+
+	"golang.org/x/text/language"
 )
 
 type testTable struct {
 	inText   string
-	langFrom string
-	langTo   string
+	langFrom interface{}
+	langTo   interface{}
 	outText  string
 }
 
 var testingTable = []testTable{
 	{"Hello", "en", "es", "Hola"},
-	{"Bye", "en", "es", "Adiós"},
+	{"Bye", language.English, "es", "Adiós"},
 	{"Hola", "es", "en", "Hello"},
-	{"Adios", "es", "en", "Bye"},
-	{"World", "en", "es", "Mundo"},
+	{"Adios", "es", "en", "Goodbye"},
+	{"World", language.English, "es", "Mundo"},
 }
 
 func TestTranslate(t *testing.T) {
@@ -26,8 +28,14 @@ func TestTranslate(t *testing.T) {
 	var totalDur time.Duration
 	for i := 0; i < N; i++ {
 		for _, ta := range testingTable {
+			fromStr, toStr, err := fromToTypeConvert(ta.langFrom, ta.langTo)
+			if err != nil {
+				t.Error(err, err.Error())
+				t.Fail()
+			}
+
 			start := time.Now()
-			translated, err := translate(ta.inText, ta.langFrom, ta.langTo, true, 5, time.Second)
+			translated, err := translate(ta.inText, fromStr, toStr, true, 5, time.Second)
 			if err != nil {
 				t.Error(err.Error())
 			}

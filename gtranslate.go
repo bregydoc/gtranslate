@@ -1,7 +1,6 @@
 package gtranslate
 
 import (
-	"golang.org/x/text/language"
 	"time"
 )
 
@@ -17,11 +16,35 @@ type TranslationParams struct {
 }
 
 // Translate translate a text using native tags offer by go language
-func Translate(text string, from language.Tag, to language.Tag, googleHost ...string) (string, error) {
+func Translate(text string, from, to interface{}, googleHost ...string) (string, error) {
+	fromStr, toStr, err := fromToTypeConvert(from, to)
+	if err != nil {
+		return "", err
+	}
+
 	if len(googleHost) != 0 && googleHost[0] != "" {
 		GoogleHost = googleHost[0]
 	}
-	translated, err := translate(text, from.String(), to.String(), false, 2, 0)
+
+	translated, err := translate(text, fromStr, toStr, false, defaultNumberOfRetries, 0)
+	if err != nil {
+		return "", err
+	}
+
+	return translated, nil
+}
+
+// TranslateA translate a text using native tags offer by go language
+func TranslateA(text string, to interface{}, googleHost ...string) (string, error) {
+	fromStr, toStr, err := fromToTypeConvert("auto", to)
+	if err != nil {
+		return "", err
+	}
+
+	if len(googleHost) != 0 && googleHost[0] != "" {
+		GoogleHost = googleHost[0]
+	}
+	translated, err := translate(text, fromStr, toStr, false, defaultNumberOfRetries, 0)
 	if err != nil {
 		return "", err
 	}
