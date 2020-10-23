@@ -125,3 +125,26 @@ func translate(text, from, to string, withVerification bool, tries int, delay ti
 
 	return responseText, nil
 }
+
+func fromToTypeConvert(from, to interface{}) (string, string, error) {
+	var fromStr, toStr string
+	switch f := from.(type) {
+	case string:
+		fromStr = from.(string)
+	case language.Tag:
+		fromStr = from.(language.Tag).String()
+	default:
+		return "", "", fmt.Errorf("Invalid type value %v of type %v. Valid types: string or language.Tag", from, f)
+	}
+
+	switch t := to.(type) {
+	case string:
+		toStr = to.(string)
+	case language.Tag:
+		toStr = to.(language.Tag).String()
+	default:
+		return "", "", fmt.Errorf("Invalid type value %v of type %v. Valid types: string or language.Tag", to, t)
+	}
+
+	return fromStr, toStr, nil
+}
