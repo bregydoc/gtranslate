@@ -94,7 +94,7 @@ func sM(a otto.Value, TTK ...otto.Value) (otto.Value, error) {
 	return result, nil
 }
 
-func updateTTK(TTK otto.Value) (otto.Value, error) {
+func updateTTK(TTK otto.Value, client *http.Client) (otto.Value, error) {
 	t := time.Now().UnixNano() / 3600000
 	now := math.Floor(float64(t))
 	ttk, err := strconv.ParseFloat(TTK.String(), 64)
@@ -106,7 +106,12 @@ func updateTTK(TTK otto.Value) (otto.Value, error) {
 		return TTK, nil
 	}
 
-	resp, err := http.Get(fmt.Sprintf("https://translate.%s", GoogleHost))
+	var resp *http.Response
+	if client != nil {
+		resp, err = client.Get(fmt.Sprintf("https://translate.%s", GoogleHost))
+	} else {
+		resp, err = http.Get(fmt.Sprintf("https://translate.%s", GoogleHost))
+	}
 	if err != nil {
 		return otto.UndefinedValue(), err
 	}
@@ -128,8 +133,8 @@ func updateTTK(TTK otto.Value) (otto.Value, error) {
 	return TTK, nil
 }
 
-func get(text otto.Value, ttk otto.Value) string {
-	ttk, err := updateTTK(ttk)
+func get(text otto.Value, ttk otto.Value, client *http.Client) string {
+	ttk, err := updateTTK(ttk, client)
 	if err != nil {
 		return ""
 	}

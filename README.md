@@ -45,3 +45,19 @@ func main() {
 	// en: Hello World | ja: こんにちは世界
 }
 ```
+
+#Custom client
+
+```go
+	client := &http.Client{}
+	...
+	translated, err := gtranslate.TranslateWithParams(
+		text,
+		gtranslate.TranslationParams{
+			From: "en",
+			To:   "ja",
+			Client: client,
+		},
+	)
+}
+```

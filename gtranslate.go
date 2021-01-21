@@ -1,8 +1,10 @@
 package gtranslate
 
 import (
-	"golang.org/x/text/language"
+	"net/http"
 	"time"
+
+	"golang.org/x/text/language"
 )
 
 var GoogleHost = "google.com"
@@ -14,6 +16,7 @@ type TranslationParams struct {
 	Tries      int
 	Delay      time.Duration
 	GoogleHost string
+	Client     *http.Client
 }
 
 // Translate translate a text using native tags offer by go language
@@ -21,7 +24,7 @@ func Translate(text string, from language.Tag, to language.Tag, googleHost ...st
 	if len(googleHost) != 0 && googleHost[0] != "" {
 		GoogleHost = googleHost[0]
 	}
-	translated, err := translate(text, from.String(), to.String(), false, 2, 0)
+	translated, err := translate(text, from.String(), to.String(), false, 2, 0, nil)
 	if err != nil {
 		return "", err
 	}
@@ -36,7 +39,7 @@ func TranslateWithParams(text string, params TranslationParams) (string, error) 
 	} else {
 		GoogleHost = params.GoogleHost
 	}
-	translated, err := translate(text, params.From, params.To, true, params.Tries, params.Delay)
+	translated, err := translate(text, params.From, params.To, true, params.Tries, params.Delay, params.Client)
 	if err != nil {
 		return "", err
 	}
