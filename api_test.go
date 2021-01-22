@@ -27,7 +27,7 @@ func TestTranslate(t *testing.T) {
 	for i := 0; i < N; i++ {
 		for _, ta := range testingTable {
 			start := time.Now()
-			translated, err := translate(ta.inText, ta.langFrom, ta.langTo, true, 5, time.Second)
+			translated, err := translate(ta.inText, ta.langFrom, ta.langTo, true, 5, time.Second, nil)
 			if err != nil {
 				t.Error(err.Error())
 			}
