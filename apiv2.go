@@ -24,7 +24,7 @@ const (
 	defaultNumberOfRetries = 2
 )
 
-func translate(text, from, to string, withVerification bool, tries int, delay time.Duration) (string, error) {
+func translate(text, from, to string, withVerification bool, tries int, delay time.Duration, client *http.Client) (string, error) {
 	if tries == 0 {
 		tries = defaultNumberOfRetries
 	}
@@ -44,7 +44,7 @@ func translate(text, from, to string, withVerification bool, tries int, delay ti
 
 	urll := fmt.Sprintf("https://translate.%s/translate_a/single", GoogleHost)
 
-	token := get(t, ttk)
+	token := get(t, ttk, client)
 
 	data := map[string]string{
 		"client": "gtx",
@@ -81,7 +81,11 @@ func translate(text, from, to string, withVerification bool, tries int, delay ti
 	var r *http.Response
 
 	for tries > 0 {
-		r, err = http.Get(u.String())
+		if client != nil {
+			r, err = client.Get(u.String())
+		} else {
+			r, err = http.Get(u.String())
+		}
 		if err != nil {
 			if err == http.ErrHandlerTimeout {
 				return "", errBadNetwork
