@@ -15,7 +15,12 @@ import (
 
 var vm = otto.New()
 
+var mu sync.Mutex
+
 func sM(a otto.Value, TTK ...otto.Value) (otto.Value, error) {
+	mu.Lock()
+	defer mu.Unlock()
+	
 	err := vm.Set("x", a)
 	if err != nil {
 		return otto.UndefinedValue(), err
