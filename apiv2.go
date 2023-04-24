@@ -110,9 +110,12 @@ func translate(text, from, to string, withVerification bool, tries int, delay ti
 	if err != nil {
 		return "", err
 	}
-
+	texts, ok := resp[0].([]interface{})
+	if !ok {
+		return "", nil
+	}
 	responseText := ""
-	for _, obj := range resp[0].([]interface{}) {
+	for _, obj := range texts {
 		if len(obj.([]interface{})) == 0 {
 			break
 		}
